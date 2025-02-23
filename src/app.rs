@@ -8,6 +8,7 @@ pub struct App {
 }
 
 impl App {
+    // initialize the app
     pub fn new() -> Self {
         Self {
             hidden_number: random_range(0..100),
@@ -19,23 +20,23 @@ impl App {
 
     // NOTE: code below adapted from https://ratatui.rs/examples/apps/user_input/
 
-    fn move_cursor_left(&mut self) {
+    pub fn move_cursor_left(&mut self) {
         let cursor_moved_left = self.character_index.saturating_sub(1);
         self.character_index = self.clamp_cursor(cursor_moved_left);
     }
 
-    fn move_cursor_right(&mut self) {
+    pub fn move_cursor_right(&mut self) {
         let cursor_moved_right = self.character_index.saturating_add(1);
         self.character_index = self.clamp_cursor(cursor_moved_right);
     }
 
-    fn enter_char(&mut self, new_char: char) {
+    pub fn enter_char(&mut self, new_char: char) {
         let index = self.byte_index();
         self.input.insert(index, new_char);
         self.move_cursor_right();
     }
 
-    fn delete_char(&mut self) {
+    pub fn delete_char(&mut self) {
         let is_not_cursor_leftmost = self.character_index != 0;
         if is_not_cursor_leftmost {
             // Method "remove" is not used on the saved text for deleting the selected char.
@@ -71,5 +72,9 @@ impl App {
             .map(|(i, _)| i)
             .nth(self.character_index)
             .unwrap_or(self.input.len())
+    }
+
+    pub fn draw(&self, frame: &mut ratatui::Frame<'_>) {
+        todo!()
     }
 }

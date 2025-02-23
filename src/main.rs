@@ -1,4 +1,5 @@
 mod app;
+mod input;
 use crate::app::App;
 
 fn main() -> Result<()> {
