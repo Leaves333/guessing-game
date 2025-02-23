@@ -12,6 +12,7 @@ pub enum Focus {
     Editing,
 }
 
+// get input from the user to modify app state
 impl App {
     pub fn run(mut self, mut terminal: DefaultTerminal) -> Result<()> {
         loop {
@@ -46,13 +47,18 @@ impl App {
     fn submit_answer(&mut self) {
         match self.input.parse::<i32>() {
             Ok(guess) => {
-                self.previous_guesses.push(guess);
                 self.deviations.push(guess - self.hidden_number);
-
                 let response = match guess.cmp(&self.hidden_number) {
-                    Ordering::Less => "too low!",
-                    Ordering::Greater => "too high!",
+                    Ordering::Less => {
+                        self.guesses_low += 1;
+                        "too low!"
+                    }
+                    Ordering::Greater => {
+                        self.guesses_high += 1;
+                        "too high!"
+                    }
                     Ordering::Equal => {
+                        self.guesses_right += 1;
                         self.hidden_number = random_range(0..100);
                         "yay you did it! picking a new number... "
                     }

@@ -5,6 +5,7 @@ mod draw;
 mod input;
 use crate::app::App;
 
+// driver function for the whole app
 fn main() -> Result<()> {
     color_eyre::install()?;
     let terminal = ratatui::init();

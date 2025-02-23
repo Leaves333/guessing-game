@@ -4,7 +4,9 @@ use rand::random_range;
 pub struct App {
     pub hidden_number: i32,
 
-    pub previous_guesses: Vec<i32>,
+    pub guesses_high: u32,
+    pub guesses_low: u32,
+    pub guesses_right: u32,
     pub deviations: Vec<i32>, // track difference between guess and actual number
 
     pub input: String,
@@ -14,13 +16,16 @@ pub struct App {
     pub messages: Vec<String>,
 }
 
+// helper functions for managing the app's state
 impl App {
     // initialize the app
     pub fn new() -> Self {
         Self {
             hidden_number: random_range(0..100),
 
-            previous_guesses: Vec::new(),
+            guesses_low: 0,
+            guesses_high: 0,
+            guesses_right: 0,
             deviations: Vec::new(),
 
             input: String::new(),
