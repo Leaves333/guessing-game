@@ -1,5 +1,8 @@
+use std::cmp::Ordering;
+
 use color_eyre::Result;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
+use rand::random_range;
 use ratatui::DefaultTerminal;
 
 use crate::App;
@@ -44,7 +47,18 @@ impl App {
         match self.input.parse::<i32>() {
             Ok(guess) => {
                 self.previous_guesses.push(guess);
-                self.deviations.push(self.hidden_number - guess);
+                self.deviations.push(guess - self.hidden_number);
+
+                let response = match guess.cmp(&self.hidden_number) {
+                    Ordering::Less => "too low!",
+                    Ordering::Greater => "too high!",
+                    Ordering::Equal => {
+                        self.hidden_number = random_range(0..100);
+                        "yay you did it! picking a new number... "
+                    }
+                };
+                let result_message = format!("{guess}: {response}");
+                self.messages.push(result_message);
             }
             Err(_) => {}
         };

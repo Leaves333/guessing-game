@@ -10,6 +10,8 @@ pub struct App {
     pub input: String,
     pub character_index: usize,
     pub focus: Focus,
+
+    pub messages: Vec<String>,
 }
 
 impl App {
@@ -17,11 +19,15 @@ impl App {
     pub fn new() -> Self {
         Self {
             hidden_number: random_range(0..100),
+
             previous_guesses: Vec::new(),
             deviations: Vec::new(),
-            character_index: 0,
+
             input: String::new(),
+            character_index: 0,
             focus: Focus::Normal,
+
+            messages: Vec::new(),
         }
     }
 
