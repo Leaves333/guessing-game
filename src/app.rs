@@ -50,6 +50,9 @@ impl App {
 
     pub fn enter_char(&mut self, new_char: char) {
         let index = self.byte_index();
+        if !new_char.is_digit(10) {
+            return;
+        }
         self.input.insert(index, new_char);
         self.move_cursor_right();
     }

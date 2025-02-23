@@ -47,6 +47,14 @@ impl App {
     fn submit_answer(&mut self) {
         match self.input.parse::<i32>() {
             Ok(guess) => {
+                if guess < 0 || guess > 100 {
+                    let result_message = "that's a bad number...".to_string();
+                    self.input.clear();
+                    self.reset_cursor();
+                    self.messages.push(result_message);
+                    return;
+                }
+
                 self.deviations.push(guess - self.hidden_number);
                 let response = match guess.cmp(&self.hidden_number) {
                     Ordering::Less => {
@@ -66,7 +74,10 @@ impl App {
                 let result_message = format!("{guess}: {response}");
                 self.messages.push(result_message);
             }
-            Err(_) => {}
+            Err(_) => {
+                let result_message = "that's a bad number...".to_string();
+                self.messages.push(result_message);
+            }
         };
 
         self.input.clear();
