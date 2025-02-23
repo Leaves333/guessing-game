@@ -1,10 +1,15 @@
+use crate::input::Focus;
 use rand::random_range;
 
 pub struct App {
-    hidden_number: u32,
-    deviations: Vec<i32>, // track difference between guess and actual number
-    input: String,
-    character_index: usize,
+    pub hidden_number: i32,
+
+    pub previous_guesses: Vec<i32>,
+    pub deviations: Vec<i32>, // track difference between guess and actual number
+
+    pub input: String,
+    pub character_index: usize,
+    pub focus: Focus,
 }
 
 impl App {
@@ -12,9 +17,11 @@ impl App {
     pub fn new() -> Self {
         Self {
             hidden_number: random_range(0..100),
-            character_index: 0,
+            previous_guesses: Vec::new(),
             deviations: Vec::new(),
+            character_index: 0,
             input: String::new(),
+            focus: Focus::Normal,
         }
     }
 
@@ -56,6 +63,10 @@ impl App {
             self.input = before_char_to_delete.chain(after_char_to_delete).collect();
             self.move_cursor_left();
         }
+    }
+
+    pub fn reset_cursor(&mut self) {
+        self.character_index = 0;
     }
 
     fn clamp_cursor(&self, new_cursor_pos: usize) -> usize {

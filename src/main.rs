@@ -1,3 +1,5 @@
+use color_eyre::Result;
+
 mod app;
 mod input;
 use crate::app::App;

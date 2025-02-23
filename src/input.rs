@@ -1,9 +1,10 @@
+use color_eyre::Result;
 use crossterm::event::{self, Event, KeyCode, KeyEventKind};
 use ratatui::DefaultTerminal;
 
 use crate::App;
 
-enum Focus {
+pub enum Focus {
     Normal,
     Editing,
 }
@@ -14,10 +15,10 @@ impl App {
             terminal.draw(|frame| self.draw(frame))?;
 
             if let Event::Key(key) = event::read()? {
-                match self.input_mode {
+                match self.focus {
                     Focus::Normal => match key.code {
                         KeyCode::Char('e') => {
-                            self.input_mode = Focus::Editing;
+                            self.focus = Focus::Editing;
                         }
                         KeyCode::Char('q') => {
                             return Ok(());
@@ -25,17 +26,30 @@ impl App {
                         _ => {}
                     },
                     Focus::Editing if key.kind == KeyEventKind::Press => match key.code {
-                        KeyCode::Enter => self.submit_message(),
+                        KeyCode::Enter => self.submit_answer(),
                         KeyCode::Char(to_insert) => self.enter_char(to_insert),
                         KeyCode::Backspace => self.delete_char(),
                         KeyCode::Left => self.move_cursor_left(),
                         KeyCode::Right => self.move_cursor_right(),
-                        KeyCode::Esc => self.input_mode = Focus::Normal,
+                        KeyCode::Esc => self.focus = Focus::Normal,
                         _ => {}
                     },
                     Focus::Editing => {}
                 }
             }
         }
+    }
+
+    fn submit_answer(&mut self) {
+        match self.input.parse::<i32>() {
+            Ok(guess) => {
+                self.previous_guesses.push(guess);
+                self.deviations.push(self.hidden_number - guess);
+            }
+            Err(_) => {}
+        };
+
+        self.input.clear();
+        self.reset_cursor();
     }
 }
