@@ -84,8 +84,4 @@ impl App {
             .nth(self.character_index)
             .unwrap_or(self.input.len())
     }
-
-    pub fn draw(&self, frame: &mut ratatui::Frame<'_>) {
-        todo!()
-    }
 }
